@@ -43,6 +43,7 @@ function sendMessage() {
 
 function onStart(request, response) {
   wpi.digitalWrite(config.remoteLedPin, 1);
+  sendMessage();
   console.log('Try to invoke method start(' + request.payload || '' + ')');
   sendingMessage = true;
 
@@ -55,6 +56,7 @@ function onStart(request, response) {
 
 function onStop(request, response) {
   wpi.digitalWrite(config.remoteLedPin, 0);
+  sendMessage();
   console.log('Try to invoke method stop(' + request.payload || '' + ')')
   sendingMessage = false;
 
@@ -160,15 +162,15 @@ function initClient(connectionStringParam, credentialPath) {
     client.onDeviceMethod('start', onStart);
     client.onDeviceMethod('stop', onStop);
     client.on('message', receiveMessageCallback);
-    setInterval(() => {
-      client.getTwin((err, twin) => {
-        if (err) {
-          console.error("get twin message error");
-          return;
-        }
-        config.interval = twin.properties.desired.interval || config.interval;
-      });
-    }, config.interval);
-    sendMessage();
+    // setInterval(() => {
+    //   client.getTwin((err, twin) => {
+    //     if (err) {
+    //       console.error("get twin message error");
+    //       return;
+    //     }
+    //     config.interval = twin.properties.desired.interval || config.interval;
+    //   });
+    // }, config.interval);
+    //sendMessage();
   });
 })(process.argv[2]);
