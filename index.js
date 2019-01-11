@@ -117,6 +117,7 @@ function initClient(connectionStringParam, credentialPath) {
   // set up wiring
   wpi.setup('wpi');
   wpi.pinMode(config.LEDPin, wpi.OUTPUT);
+  wpi.pinMode(config.remoteLedPin, wpi.OUTPUT);
   messageProcessor = new MessageProcessor(config);
   blinkLED();
 
