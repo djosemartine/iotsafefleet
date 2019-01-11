@@ -103,7 +103,7 @@ function initClient(connectionStringParam, credentialPath) {
   return client;
 }
 
-(function (connectionString) {
+(function () {
   // read in configuration in config.json
   try {
     config = require('./config.json');
@@ -111,60 +111,60 @@ function initClient(connectionStringParam, credentialPath) {
     console.error('Failed to load config.json: ' + err.message);
     return;
   }
-
   // set up wiring
   wpi.setup('wpi');
   wpi.pinMode(config.LEDPin, wpi.OUTPUT);
-  messageProcessor = new MessageProcessor(config);
+  blinkLED();
+  // messageProcessor = new MessageProcessor(config);
 
-  try {
-    var firstTimeSetting = false;
-    if (!fs.existsSync(path.join(process.env.HOME, '.iot-hub-getting-started/biSettings.json'))) {
-      firstTimeSetting = true;
-    }
-    bi.start();
-    var deviceInfo = { device: "RaspberryPi", language: "NodeJS" };
-    if (bi.isBIEnabled()) {
-      bi.trackEventWithoutInternalProperties('yes', deviceInfo);
-      bi.trackEvent('success', deviceInfo);
-    }
-    else {
-      bi.disableRecordingClientIP();
-      bi.trackEventWithoutInternalProperties('no', deviceInfo);
-    }
-    if(firstTimeSetting) {
-      console.log("Telemetry setting will be remembered. If you would like to reset, please delete following file and run the sample again");
-      console.log("~/.iot-hub-getting-started/biSettings.json\n");
-    }
-    bi.flush();
-  } catch (e) {
-    //ignore
-  }
+  // try {
+  //   var firstTimeSetting = false;
+  //   if (!fs.existsSync(path.join(process.env.HOME, '.iot-hub-getting-started/biSettings.json'))) {
+  //     firstTimeSetting = true;
+  //   }
+  //   bi.start();
+  //   var deviceInfo = { device: "RaspberryPi", language: "NodeJS" };
+  //   if (bi.isBIEnabled()) {
+  //     bi.trackEventWithoutInternalProperties('yes', deviceInfo);
+  //     bi.trackEvent('success', deviceInfo);
+  //   }
+  //   else {
+  //     bi.disableRecordingClientIP();
+  //     bi.trackEventWithoutInternalProperties('no', deviceInfo);
+  //   }
+  //   if(firstTimeSetting) {
+  //     console.log("Telemetry setting will be remembered. If you would like to reset, please delete following file and run the sample again");
+  //     console.log("~/.iot-hub-getting-started/biSettings.json\n");
+  //   }
+  //   bi.flush();
+  // } catch (e) {
+  //   //ignore
+  // }
 
-  // create a client
-  // read out the connectionString from process environment
-  connectionString = connectionString || process.env['AzureIoTHubDeviceConnectionString'];
-  client = initClient(connectionString, config);
+  // // create a client
+  // // read out the connectionString from process environment
+  // connectionString = config.connectionString || process.env['AzureIoTHubDeviceConnectionString'];
+  // client = initClient(connectionString, config);
 
-  client.open((err) => {
-    if (err) {
-      console.error('[IoT hub Client] Connect error: ' + err.message);
-      return;
-    }
+  // client.open((err) => {
+  //   if (err) {
+  //     console.error('[IoT hub Client] Connect error: ' + err.message);
+  //     return;
+  //   }
 
-    // set C2D and device method callback
-    client.onDeviceMethod('start', onStart);
-    client.onDeviceMethod('stop', onStop);
-    client.on('message', receiveMessageCallback);
-    setInterval(() => {
-      client.getTwin((err, twin) => {
-        if (err) {
-          console.error("get twin message error");
-          return;
-        }
-        config.interval = twin.properties.desired.interval || config.interval;
-      });
-    }, config.interval);
-    sendMessage();
-  });
-})(process.argv[2]);
+  //   // set C2D and device method callback
+  //   client.onDeviceMethod('start', onStart);
+  //   client.onDeviceMethod('stop', onStop);
+  //   client.on('message', receiveMessageCallback);
+  //   setInterval(() => {
+  //     client.getTwin((err, twin) => {
+  //       if (err) {
+  //         console.error("get twin message error");
+  //         return;
+  //       }
+  //       config.interval = twin.properties.desired.interval || config.interval;
+  //     });
+  //   }, config.interval);
+  //   sendMessage();
+  // });
+})();
