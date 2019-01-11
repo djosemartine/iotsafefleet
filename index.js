@@ -17,13 +17,10 @@ const Protocol = require('azure-iot-device-mqtt').Mqtt;
 const bi = require('az-iot-bi');
 
 const MessageProcessor = require('./messageProcessor.js');
-
-var sendingMessage = true;
 var messageId = 0;
 var client, config, messageProcessor;
 
-function sendMessage() {
-  if (!sendingMessage) { return; }
+function sendMessage() {  
   messageId++;
   messageProcessor.getMessage(messageId, (content, temperatureAlert) => {
     var message = new Message(content);
@@ -36,7 +33,6 @@ function sendMessage() {
         blinkLED();
         console.log('Message sent to Azure IoT Hub');
       }
-      //setTimeout(sendMessage, config.interval);
     });
   });
 }
@@ -45,7 +41,6 @@ function onStart(request, response) {
   wpi.digitalWrite(config.remoteLedPin, 1);
   sendMessage();
   console.log('Try to invoke method start(' + request.payload || '' + ')');
-  sendingMessage = true;
 
   response.send(200, 'Successully start sending message to cloud', function (err) {
     if (err) {
@@ -58,7 +53,6 @@ function onStop(request, response) {
   wpi.digitalWrite(config.remoteLedPin, 0);
   sendMessage();
   console.log('Try to invoke method stop(' + request.payload || '' + ')')
-  sendingMessage = false;
 
   response.send(200, 'Successully stop sending message to cloud', function (err) {
     if (err) {
@@ -162,15 +156,5 @@ function initClient(connectionStringParam, credentialPath) {
     client.onDeviceMethod('start', onStart);
     client.onDeviceMethod('stop', onStop);
     client.on('message', receiveMessageCallback);
-    // setInterval(() => {
-    //   client.getTwin((err, twin) => {
-    //     if (err) {
-    //       console.error("get twin message error");
-    //       return;
-    //     }
-    //     config.interval = twin.properties.desired.interval || config.interval;
-    //   });
-    // }, config.interval);
-    //sendMessage();
   });
 })(process.argv[2]);
