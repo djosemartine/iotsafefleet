@@ -42,6 +42,7 @@ function sendMessage() {
 }
 
 function onStart(request, response) {
+  wpi.digitalWrite(config.remoteLedPin, 1);
   console.log('Try to invoke method start(' + request.payload || '' + ')');
   sendingMessage = true;
 
@@ -53,6 +54,7 @@ function onStart(request, response) {
 }
 
 function onStop(request, response) {
+  wpi.digitalWrite(config.remoteLedPin, 0);
   console.log('Try to invoke method stop(' + request.payload || '' + ')')
   sendingMessage = false;
 
