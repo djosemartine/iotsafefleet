@@ -1,7 +1,7 @@
 {
   "simulatedData": true,
   "interval": 2000,
-  "deviceId": "Raspberry Pi Node",
+  "deviceId": "hackathon2019IoT",
   "LEDPin": 5,
   "messageMax": 256,
   "credentialPath": "~/.iot-hub",
