@@ -36,7 +36,7 @@ function sendMessage() {
         blinkLED();
         console.log('Message sent to Azure IoT Hub');
       }
-      setTimeout(sendMessage, config.interval);
+      //setTimeout(sendMessage, config.interval);
     });
   });
 }
