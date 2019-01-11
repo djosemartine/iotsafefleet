@@ -103,7 +103,7 @@ function initClient(connectionStringParam, credentialPath) {
   return client;
 }
 
-(function () {
+(function (connectionString) {
   // read in configuration in config.json
   try {
     config = require('./config.json');
@@ -111,11 +111,12 @@ function initClient(connectionStringParam, credentialPath) {
     console.error('Failed to load config.json: ' + err.message);
     return;
   }
+
   // set up wiring
   wpi.setup('wpi');
   wpi.pinMode(config.LEDPin, wpi.OUTPUT);
-  blinkLED();
   messageProcessor = new MessageProcessor(config);
+  blinkLED();
 
   try {
     var firstTimeSetting = false;
@@ -143,7 +144,7 @@ function initClient(connectionStringParam, credentialPath) {
 
   // create a client
   // read out the connectionString from process environment
-  connectionString = config.connectionString || process.env['AzureIoTHubDeviceConnectionString'];
+  connectionString = connectionString || process.env['AzureIoTHubDeviceConnectionString'];
   client = initClient(connectionString, config);
 
   client.open((err) => {
@@ -167,4 +168,4 @@ function initClient(connectionStringParam, credentialPath) {
     }, config.interval);
     sendMessage();
   });
-})();
+})(process.argv[2]);
