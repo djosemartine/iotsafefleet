@@ -79,12 +79,12 @@ function blinkLED() {
 }
 
 function initClient(connectionStringParam, credentialPath) {
-  var connectionString = ConnectionString.parse(config.connectionString);
+  var connectionString = ConnectionString.parse(connectionStringParam);
   var deviceId = connectionString.DeviceId;
 
   // fromConnectionString must specify a transport constructor, coming from any transport package.
-  client = Client.fromSharedAccessSignature(connectionStringParam, Protocol);
-  // client = Client.fromConnectionString(connectionStringParam, Protocol);
+  // client = Client.fromSharedAccessSignature(connectionStringParam, Protocol);
+  client = Client.fromConnectionString(connectionStringParam, Protocol);
 
   // Configure the client to use X509 authentication if required by the connection string.
   if (connectionString.x509) {
