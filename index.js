@@ -20,11 +20,12 @@ const MessageProcessor = require('./messageProcessor.js');
 var messageId = 0;
 var client, config, messageProcessor;
 
-function sendMessage() {  
+function sendMessage(stateLed) {  
   messageId++;
   messageProcessor.getMessage(messageId, (content, temperatureAlert) => {
     var message = new Message(content);
     message.properties.add('temperatureAlert', temperatureAlert ? 'true' : 'false');
+    message.properties.add('stateLed', stateLed ? 'true' : 'false');
     console.log('Sending message: ' + content);
     client.sendEvent(message, (err) => {
       if (err) {
@@ -39,7 +40,7 @@ function sendMessage() {
 
 function onStart(request, response) {
   wpi.digitalWrite(config.remoteLedPin, 1);
-  sendMessage();
+  sendMessage('true');
   console.log('Try to invoke method start(' + request.payload || '' + ')');
 
   response.send(200, 'Successully start sending message to cloud', function (err) {
@@ -51,7 +52,7 @@ function onStart(request, response) {
 
 function onStop(request, response) {
   wpi.digitalWrite(config.remoteLedPin, 0);
-  sendMessage();
+  sendMessage('false');
   console.log('Try to invoke method stop(' + request.payload || '' + ')')
 
   response.send(200, 'Successully stop sending message to cloud', function (err) {
@@ -78,11 +79,12 @@ function blinkLED() {
 }
 
 function initClient(connectionStringParam, credentialPath) {
-  var connectionString = ConnectionString.parse(connectionStringParam);
+  var connectionString = ConnectionString.parse(config.connectionString);
   var deviceId = connectionString.DeviceId;
 
   // fromConnectionString must specify a transport constructor, coming from any transport package.
-  client = Client.fromConnectionString(connectionStringParam, Protocol);
+  client = Client.fromSharedAccessSignature(connectionStringParam, Protocol);
+  // client = Client.fromConnectionString(connectionStringParam, Protocol);
 
   // Configure the client to use X509 authentication if required by the connection string.
   if (connectionString.x509) {

@@ -13,7 +13,8 @@ function MessageProcessor(option) {
   }, option);
   this.sensor = option.simulatedData ? new SimulatedSensor() : new Bme280Sensor(option.i2cOption);
   this.deviceId = option.deviceId;
-  this.temperatureAlert = option.temperatureAlert
+  this.temperatureAlert = option.temperatureAlert;
+  this.stateLed = option.stateLed;
   this.sensor.init(() => {
     this.inited = true;
   });
@@ -31,7 +32,8 @@ MessageProcessor.prototype.getMessage = function (messageId, cb) {
       messageId: messageId,
       deviceId: this.deviceId,
       temperature: data.temperature,
-      humidity: data.humidity
+      humidity: data.humidity,
+      stateLed: data.stateLed
     }), data.temperature > this.temperatureAlert);
   });
 }
