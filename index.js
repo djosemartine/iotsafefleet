@@ -23,12 +23,15 @@ const MessageProcessor = require('./messageProcessor.js');
 var messageId = 0;
 var client, config, messageProcessor;
 
+
 function sendMessage(stateLed) {
   messageId++;
   messageProcessor.getMessage(messageId, (content, temperatureAlert) => {
     var message = new Message(content);
     message.properties.add('temperatureAlert', temperatureAlert ? 'true' : 'false');
     message.properties.add('stateLed', stateLed ? 'true' : 'false');
+    message.properties.add('Longitud', random(0, 99));
+    message.properties.add('Latitud', random(0, 99));
     console.log('Sending message: ' + content);
     client.sendEvent(message, (err) => {
       if (err) {
@@ -40,6 +43,11 @@ function sendMessage(stateLed) {
     });
   });
 }
+
+function random(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
 
 function onStart(request, response) {
   wpi.digitalWrite(config.remoteLedPin, 1);

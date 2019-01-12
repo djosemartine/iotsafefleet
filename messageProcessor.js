@@ -32,7 +32,6 @@ MessageProcessor.prototype.getMessage = function (messageId, cb) {
       messageId: messageId,
       deviceId: this.deviceId,
       temperature: data.temperature,
-      humidity: data.humidity,
       stateLed: data.stateLed
     }), data.temperature > this.temperatureAlert);
   });
