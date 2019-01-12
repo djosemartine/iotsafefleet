@@ -79,6 +79,7 @@ function blinkLED() {
 }
 
 function initClient(connectionStringParam, credentialPath) {
+  console.log(connectionStringParam);
   var connectionString = ConnectionString.parse(connectionStringParam);
   var deviceId = connectionString.DeviceId;
 
