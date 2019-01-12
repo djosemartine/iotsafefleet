@@ -84,7 +84,7 @@ function blinkLED() {
 function provisionDevice() {
   var provisioningHost = 'global.azure-devices-provisioning.net';
   var idScope = '0ne0003F9FE';
-  var registrationId = 'certificate-hackathon-x5';
+  var registrationId = 'certificate-hackathon-x509';
   var deviceCert = {
     cert: fs.readFileSync('certificate-hackathon-x509_cert.pem').toString(),
     key: fs.readFileSync('certificate-hackathon-x509_key.pem').toString()
