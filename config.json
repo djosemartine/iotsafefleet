@@ -11,5 +11,5 @@
     "i2cBusNo": 1,
     "i2cAddress": 119
   },
-  "connectionString": "HostName=HackathonJobless2019.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=gdOtBgnrB5RhlLnqVXM40Af2OwQC+zxbH0jqkLNdzeo="
+  "connectionString": "HostName=HackathonJobless2019.azure-devices.net;DeviceId=hackathon2019IoT;SharedAccessKey=8X9J2NaFwvf8oZ2GLREhZNJuw1vYt/kQMUMuPwcMuAE="
 }
