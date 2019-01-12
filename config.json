@@ -1,6 +1,6 @@
 {
   "simulatedData": true,
-  "deviceId": "hackathon2019IoT",
+  "deviceId": "provisioningid",
   "LEDPin": 6,
   "remoteLedPin": 5,
   "messageMax": 256,
@@ -11,5 +11,5 @@
     "i2cBusNo": 1,
     "i2cAddress": 119
   },
-  "connectionString": "HostName=HackathonJobless2019.azure-devices.net;DeviceId=hackathon2019IoT;x509=true"
+  "connectionString": "HostName=HackathonJobless2019.azure-devices.net;DeviceId=provisioningid;x509=true"
 }
