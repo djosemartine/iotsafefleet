@@ -103,7 +103,7 @@ function initClient(connectionStringParam, credentialPath) {
   return client;
 }
 
-(function (connectionString) {
+(function () {
   // read in configuration in config.json
   try {
     config = require('./config.json');
@@ -145,7 +145,7 @@ function initClient(connectionStringParam, credentialPath) {
 
   // create a client
   // read out the connectionString from process environment
-  connectionString = connectionString || process.env['AzureIoTHubDeviceConnectionString'];
+  var connectionString = config.connectionString;
   client = initClient(connectionString, config);
 
   client.open((err) => {
@@ -159,4 +159,4 @@ function initClient(connectionStringParam, credentialPath) {
     client.onDeviceMethod('stop', onStop);
     client.on('message', receiveMessageCallback);
   });
-})(process.argv[2]);
+})();
