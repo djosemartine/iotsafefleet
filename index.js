@@ -79,7 +79,6 @@ function blinkLED() {
 }
 
 function initClient(connectionStringParam, credentialPath) {
-  console.log(connectionStringParam);
   var connectionString = ConnectionString.parse(connectionStringParam);
   var deviceId = connectionString.DeviceId;
 
@@ -93,8 +92,8 @@ function initClient(connectionStringParam, credentialPath) {
     // These files should be in the current folder and use the following naming convention:
     // [device name]-cert.pem and [device name]-key.pem, example: myraspberrypi-cert.pem
     var connectionOptions = {
-      cert: fs.readFileSync(path.join(credentialPath, deviceId + '-cert.pem')).toString(),
-      key: fs.readFileSync(path.join(credentialPath, deviceId + '-key.pem')).toString()
+      cert: fs.readFileSync('certificate-hackathon-x509_cert.pem').toString(),
+      key: fs.readFileSync('certificate-hackathon-x509_key').toString()
     };
 
     client.setOptions(connectionOptions);
