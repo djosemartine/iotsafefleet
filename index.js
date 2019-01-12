@@ -22,6 +22,10 @@ const bi = require('az-iot-bi');
 const MessageProcessor = require('./messageProcessor.js');
 var messageId = 0;
 var client, config, messageProcessor;
+const deviceCert = {
+  cert: fs.readFileSync('certificate-hackathon-x509_cert.pem').toString(),
+  key: fs.readFileSync('certificate-hackathon-x509_key.pem').toString()
+};
 
 
 function sendMessage(stateLed) {
@@ -93,10 +97,6 @@ function provisionDevice() {
   var provisioningHost = 'global.azure-devices-provisioning.net';
   var idScope = '0ne0003F9FE';
   var registrationId = 'certificate-hackathon-x509';
-  var deviceCert = {
-    cert: fs.readFileSync('certificate-hackathon-x509_cert.pem').toString(),
-    key: fs.readFileSync('certificate-hackathon-x509_key.pem').toString()
-  };
 
   var transport = new Transport();
   var securityClient = new X509Security(registrationId, deviceCert);
@@ -142,12 +142,12 @@ function initClient(connectionStringParam, credentialPath) {
     // Read X.509 certificate and private key.
     // These files should be in the current folder and use the following naming convention:
     // [device name]-cert.pem and [device name]-key.pem, example: myraspberrypi-cert.pem
-    var connectionOptions = {
-      cert: fs.readFileSync('certificate-hackathon-x509_cert.pem').toString(),
-      key: fs.readFileSync('certificate-hackathon-x509_key.pem').toString()
-    };
+    // var connectionOptions = {
+    //   cert: fs.readFileSync('certificate-hackathon-x509_cert.pem').toString(),
+    //   key: fs.readFileSync('certificate-hackathon-x509_key.pem').toString()
+    // };
 
-    client.setOptions(connectionOptions);
+    client.setOptions(deviceCert);
 
     console.log('[Device] Using X.509 client certificate authentication');
   }
