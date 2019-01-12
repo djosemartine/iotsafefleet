@@ -11,7 +11,15 @@
     "azure-iot-device": "1.1.7",
     "azure-iot-device-mqtt": "1.1.7",
     "bme280-sensor": "^0.1.6",
-    "node-wiring-pi": "0.0.4"
+    "node-wiring-pi": "0.0.4",
+    "azure-iot-provisioning-device": "1.5.0",
+    "azure-iot-provisioning-device-amqp": "1.5.0",
+    "azure-iot-provisioning-device-http": "1.5.0",
+    "azure-iot-provisioning-device-mqtt": "1.5.0",
+    "azure-iot-security-tpm": "1.5.0",
+    "azure-iot-security-x509": "1.5.0",
+    "azure-iot-device-amqp": "1.9.0",
+    "azure-iot-device-http": "1.9.0"
   },
   "license": "MIT",
   "devDependencies": {

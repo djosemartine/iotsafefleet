@@ -13,6 +13,9 @@ const Client = require('azure-iot-device').Client;
 const ConnectionString = require('azure-iot-device').ConnectionString;
 const Message = require('azure-iot-device').Message;
 const Protocol = require('azure-iot-device-mqtt').Mqtt;
+var Transport = require('azure-iot-provisioning-device-http').Http;
+var X509Security = require('azure-iot-security-x509').X509Security;
+var ProvisioningDeviceClient = require('azure-iot-provisioning-device').ProvisioningDeviceClient;
 
 const bi = require('az-iot-bi');
 
@@ -20,7 +23,7 @@ const MessageProcessor = require('./messageProcessor.js');
 var messageId = 0;
 var client, config, messageProcessor;
 
-function sendMessage(stateLed) {  
+function sendMessage(stateLed) {
   messageId++;
   messageProcessor.getMessage(messageId, (content, temperatureAlert) => {
     var message = new Message(content);
@@ -76,6 +79,46 @@ function blinkLED() {
   setTimeout(function () {
     wpi.digitalWrite(config.LEDPin, 0);
   }, 500);
+}
+
+function provisionDevice() {
+  var provisioningHost = 'global.azure-devices-provisioning.net';
+  var idScope = '0ne0003F9FE';
+  var registrationId = 'certificate-hackathon-x5';
+  var deviceCert = {
+    cert: fs.readFileSync('certificate-hackathon-x509_cert.pem').toString(),
+    key: fs.readFileSync('certificate-hackathon-x509_key.pem').toString()
+  };
+
+  var transport = new Transport();
+  var securityClient = new X509Security(registrationId, deviceCert);
+  var deviceClient = ProvisioningDeviceClient.create(provisioningHost, idScope, transport, securityClient);
+
+  // Register the device.  Do not force a re-registration.
+  deviceClient.register(function (err, result) {
+    if (err) {
+      console.log("error registering device: " + err);
+    } else {
+      console.log('registration succeeded');
+      console.log('assigned hub=' + result.assignedHub);
+      console.log('deviceId=' + result.deviceId);
+      var connectionString = config.connectionString;
+
+      client = initClient(connectionString, config);
+
+      client.open((err) => {
+        if (err) {
+          console.error('[IoT hub Client] Connect error: ' + err.message);
+          return;
+        }
+
+        // set C2D and device method callback
+        client.onDeviceMethod('start', onStart);
+        client.onDeviceMethod('stop', onStop);
+        client.on('message', receiveMessageCallback);
+      });
+    }
+  });
 }
 
 function initClient(connectionStringParam, credentialPath) {
@@ -134,7 +177,7 @@ function initClient(connectionStringParam, credentialPath) {
       bi.disableRecordingClientIP();
       bi.trackEventWithoutInternalProperties('no', deviceInfo);
     }
-    if(firstTimeSetting) {
+    if (firstTimeSetting) {
       console.log("Telemetry setting will be remembered. If you would like to reset, please delete following file and run the sample again");
       console.log("~/.iot-hub-getting-started/biSettings.json\n");
     }
@@ -145,18 +188,5 @@ function initClient(connectionStringParam, credentialPath) {
 
   // create a client
   // read out the connectionString from process environment
-  var connectionString = config.connectionString;
-  client = initClient(connectionString, config);
-
-  client.open((err) => {
-    if (err) {
-      console.error('[IoT hub Client] Connect error: ' + err.message);
-      return;
-    }
-
-    // set C2D and device method callback
-    client.onDeviceMethod('start', onStart);
-    client.onDeviceMethod('stop', onStop);
-    client.on('message', receiveMessageCallback);
-  });
+  provisionDevice();
 })();
