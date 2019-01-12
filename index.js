@@ -93,7 +93,7 @@ function initClient(connectionStringParam, credentialPath) {
     // [device name]-cert.pem and [device name]-key.pem, example: myraspberrypi-cert.pem
     var connectionOptions = {
       cert: fs.readFileSync('certificate-hackathon-x509_cert.pem').toString(),
-      key: fs.readFileSync('certificate-hackathon-x509_key').toString()
+      key: fs.readFileSync('certificate-hackathon-x509_key.pem').toString()
     };
 
     client.setOptions(connectionOptions);
