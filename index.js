@@ -102,7 +102,7 @@ function provisionDevice() {
       console.log('registration succeeded');
       console.log('assigned hub=' + result.assignedHub);
       console.log('deviceId=' + result.deviceId);
-      var connectionString = config.connectionString;
+      var connectionString = config.connectionString + 'DeviceId=' + result.deviceId;
 
       client = initClient(connectionString, config);
 
