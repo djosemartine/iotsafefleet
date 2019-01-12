@@ -23,8 +23,8 @@ const MessageProcessor = require('./messageProcessor.js');
 var messageId = 0;
 var client, config, messageProcessor;
 const deviceCert = {
-  cert: fs.readFileSync('certificateHackathonX509_cert.pem').toString(),
-  key: fs.readFileSync('certificateHackathonX509_key.pem').toString()
+  cert: fs.readFileSync('/home/pi/iotsafefleet/certificateHackathonX509_cert.pem').toString(),
+  key: fs.readFileSync('/home/pi/iotsafefleet/certificateHackathonX509_key.pem').toString()
 };
 
 
